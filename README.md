@@ -1,35 +1,38 @@
-Acesta este un proiect de tip consolă pentru gestionarea rezervărilor într-o sală de cinema. Programul este structurat modular, folosind clase separate pentru locuri și bilete.
+Sistem de Gestiune și Rezervare Cinema (Arhitectură Modulară C++)
+Prezentul proiect constituie o aplicație de tip consolă destinată automatizării procesului de rezervare a locurilor într-o sală de cinema. Soluția este dezvoltată utilizând paradigma programării orientate pe obiecte (POO), asigurând o separare clară a responsabilităților prin module dedicate.
 
-Funcționalități
-Harta Sălii: Afișare tabelară pe rânduri și locuri (L = Liber, XX = Ocupat).
+Funcționalități Principale
+Gestiunea Dinamică a Locurilor: Reprezentarea grafică a sălii sub formă matricială, permițând identificarea rapidă a disponibilității: L pentru loc disponibil și XX pentru loc rezervat.
 
-Categorii Preț: Calcul automat pentru Adult, Elev, Copil și Persoane cu dizabilități.
+Sistem de Tarifare Diferențiat: Implementarea unei logici de calcul automat al prețului în funcție de profilul utilizatorului, acoperind categoriile: Adult, Elev, Copil și Persoane cu dizabilități.
 
-Reducere Vineri: Preț unic de 15 RON în fiecare vineri, indiferent de categoria aleasă.
+Politici Comerciale Speciale: Integrarea unui algoritm de tip Flat Rate pentru zilele de vineri, aplicând un tarif promoțional unic de 15 RON pentru toți utilizatorii.
 
-Input Case-Insensitive: Ziua săptămânii poate fi scrisă cu litere mari sau mici (ex: Vineri, vineri, VINERI).
+Procesarea Flexibilă a Datelor (Case-Insensitivity): Modulul de validare a datelor de intrare permite procesarea corectă a zilelor săptămânii, indiferent de utilizarea majusculelor sau minusculelor în textul introdus.
 
-Structura Fișierelor
-Loc.h / Loc.cpp - Clasa pentru obiectele de tip scaun (stare, rând, număr).
+Arhitectura Sistemului
+Aplicația este structurată pe trei paliere fundamentale pentru a asigura mentenanța și scalabilitatea codului:
 
-Bilet.h / Bilet.cpp - Clasa pentru logica de calcul a prețului și validarea zilelor.
+Modulul Loc (Loc.h / Loc.cpp): Definește entitatea scaun, gestionând coordonatele specifice (rând, număr) și starea de ocupare a acestuia.
 
-main.cpp - Interfața cu utilizatorul și controlul fluxului programului.
+Modulul Bilet (Bilet.h / Bilet.cpp): Încapsulează întreaga logică de business referitoare la tarife, categorii de vârstă și excepții calendaristice.
 
-Compilare și Rulare
-Pentru a compila proiectul, rulează următoarea comandă în terminal:
+Nucleul aplicației (main.cpp): Orchestrează interacțiunea cu utilizatorul și fluxul logic al operațiunilor de rezervare.
 
-Bash
-g++ main.cpp Loc.cpp Bilet.cpp -o cinema
-Pentru a rula programul:
+Procedura de Compilare și Execuție
+Pentru asamblarea modulelor într-un fișier binar executabil, utilizați compilatorul g++ cu următoarea sintaxă în terminal:
 
-Bash
-./cinema
-Utilizare
-La pornire, introduceți ziua săptămânii.
+g++ main.cpp Loc.cpp Bilet.cpp -o cinema_complet
 
-Folosiți meniul interactiv pentru a vedea sala sau pentru a rezerva un loc.
+Lansarea aplicației se realizează prin comanda:
 
-Pentru rezervare, introduceți rândul (1-3) și locul (1-10).
+./cinema_complet
 
-Selectați categoria de bilet pentru a primi prețul final.
+Ghid de Utilizare
+Configurare Context: La inițializarea programului, specificați ziua curentă a săptămânii prin introducerea numelui acesteia.
+
+Navigare Meniu: Utilizați interfața numerică pentru a consulta starea actuală a sălii sau pentru a iniția o nouă rezervare.
+
+Selecție Coordonate: Rezervarea necesită introducerea succesivă a rândului (intervalul 1-3) și a locului specific (intervalul 1-10).
+
+Finalizare Tranzacție: Selectați categoria corespunzătoare pentru emiterea biletului și afișarea valorii fiscale finale.
