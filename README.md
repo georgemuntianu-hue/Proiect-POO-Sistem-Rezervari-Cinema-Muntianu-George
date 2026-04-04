@@ -15,28 +15,21 @@ Funcționalități
 Structura Fișierelor
 
     Loc.h / Loc.cpp - Clasa pentru obiectele de tip scaun (stare, rând, număr).
-
     Bilet.h / Bilet.cpp - Clasa pentru logica de calcul a prețului și validarea zilelor.
-
     main.cpp - Interfața cu utilizatorul și controlul fluxului programului.
     Compilare și Rulare
 
 Pentru a compila proiectul, rulează următoarea comandă în terminal:
 Bash
-
 g++ main.cpp Loc.cpp Bilet.cpp -o cinema_complet
 
 Pentru a rula programul:
 Bash
-
 ./cinema_complet
 
 Utilizare
 
     La pornire, introduceți ziua săptămânii.
-
     Folosiți meniul interactiv pentru a vedea sala sau pentru a rezerva un loc.
-
     Pentru rezervare, introduceți rândul (1-3) și locul (1-10).
-
     Selectați categoria de bilet pentru a primi prețul final.
