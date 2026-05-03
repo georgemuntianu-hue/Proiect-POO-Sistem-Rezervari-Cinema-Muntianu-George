@@ -9,27 +9,36 @@ std::string Bilet::toLower(std::string data) {
     return data;
 }
 
+// Constructorul clasei
 Bilet::Bilet(int tip, std::string zi) : tipPersoana(tip), ziSaptamana(toLower(zi)) {
-    pret = calculeazaPret();
 }
 
-float Bilet::calculeazaPret() {
-    // Verificam daca e vineri (nu conteaza daca a scris Vineri sau vineri)
+// Metoda pentru calculul pretului (include suplimentul 3D)
+float Bilet::calculeazaPret(bool este3D) {
+    float p = 0;
+    
     if (ziSaptamana == "vineri") {
-        return 15.0;
+        p = 15.0; // Promotia de vineri
+    } else {
+        switch (tipPersoana) {
+            case 1: p = 30.0; break; // Adult
+            case 2: p = 20.0; break; // Elev
+            case 3: p = 10.0; break; // Copil
+            case 4: p = 0.0;  break; // Dizabilitati
+            default: p = 30.0;
+        }
     }
 
-    switch (tipPersoana) {
-        case 1: return 30.0; // Adult
-        case 2: return 20.0; // Elev
-        case 3: return 10.0; // Copil
-        case 4: return 0.0;  // Dizabilitati
-        default: return 30.0;
+    if (este3D) {
+        p += 5.0; // Suplimentul pentru film 3D
     }
+    return p;
 }
 
+// Metoda pentru obtinerea numelui tipului de bilet
 std::string Bilet::getNumeTip() {
     if (ziSaptamana == "vineri") return "Promotie Vineri";
+    
     switch (tipPersoana) {
         case 1: return "Adult";
         case 2: return "Elev";
