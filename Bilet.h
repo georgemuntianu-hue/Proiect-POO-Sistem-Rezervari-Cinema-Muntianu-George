@@ -6,14 +6,14 @@
 class Bilet {
 private:
     int tipPersoana;
-    std::string ziSaptamana; // Acum e string ("luni", "vineri", etc.)
+    std::string ziSaptamana;
     float pret;
 
 public:
     Bilet(int tip, std::string zi);
-    float calculeazaPret();
+    float calculeazaPret(bool este3D); // Modificat aici
     std::string getNumeTip();
-    static std::string toLower(std::string data); // Functie utilitara
+    static std::string toLower(std::string data);
 };
 
 #endif
