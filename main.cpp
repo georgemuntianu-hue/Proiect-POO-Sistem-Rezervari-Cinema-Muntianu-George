@@ -14,12 +14,17 @@ const string ALBASTRU = "\033[34m";
 const string GRI = "\033[90m";
 const string RESET = "\033[0m";
 const string BOLD = "\033[1m";
+const string ROSU = "\033[31m";
 
-void afisareSala(const vector<Loc>& sala) {
+// Functie actualizata pentru afisarea hartii salii in functie de dimensiuni
+void afisareSala(const vector<Loc>& sala, int locuriPerRand) {
     const string BULINA = "●"; 
 
     cout << "\n      " << BOLD << "--- ECRAN CINEMA ---" << RESET << "\n\n";
-    cout << "        1  2  3  4  5  6  7  8  9  10 (Locuri)\n";
+    cout << "        ";
+    for(int j = 1; j <= locuriPerRand; j++) cout << (j < 10 ? to_string(j) + "  " : to_string(j) + " ");
+    cout << "(Locuri)\n";
+
     int randCurent = 1;
     cout << "R. " << randCurent << " | ";
     
@@ -30,7 +35,8 @@ void afisareSala(const vector<Loc>& sala) {
             cout << VERDE << BULINA << "  " << RESET;
         }
         
-        if ((i + 1) % 10 == 0 && (i + 1) < sala.size()) {
+        // Trecerea la urmatorul rand folosind variabila locuriPerRand
+        if ((i + 1) % locuriPerRand == 0 && (i + 1) < sala.size()) {
             randCurent++;
             cout << "\nR. " << randCurent << " | ";
         }
@@ -39,12 +45,14 @@ void afisareSala(const vector<Loc>& sala) {
 }
 
 int main() {
-    // Mesaj de bun venit interactiv
+    // Configurare terminal pentru caractere speciale (util pentru Windows)
+    #ifdef _WIN32
+    system("chcp 65001 > nul");
+    #endif
+
     cout << ALBASTRU << "===========================================" << RESET << endl;
     cout << BOLD << "   🍿 BINE ATI VENIT LA CINEMA APP 🍿" << RESET << endl;
     cout << ALBASTRU << "===========================================" << RESET << endl;
-    cout << "Cu ce va pot ajuta astazi?" << endl;
-    cout << "Va rugam sa introduceti datele filmului pentru a incepe.\n" << endl;
 
     string numeFilm;
     int tipFormat;
@@ -52,15 +60,34 @@ int main() {
 
     cout << GALBEN << "➤ " << RESET << "Numele filmului: ";
     getline(cin >> ws, numeFilm); 
-    cout << GALBEN << "➤ " << RESET << "Format (1 pentru 3D, 0 pentru 2D): ";
+    cout << GALBEN << "➤ " << RESET << "Format (1 pentru 3D Premium, 0 pentru 2D Standard): ";
     cin >> tipFormat;
     este3D = (tipFormat == 1);
 
     Film filmCurent(numeFilm, este3D);
 
+    // Definirea dimensiunilor in functie de tipul salii
+    int nrRanduri, nrLocuriPerRand;
+    string tipSala;
+
+    if (este3D) {
+        // Sala 3D: Mai mica, tip VIP/Premium
+        nrRanduri = 4;
+        nrLocuriPerRand = 6;
+        tipSala = "PREMIUM 3D (Configuratie 4x6)";
+    } else {
+        // Sala 2D: Standard, mai mare
+        nrRanduri = 6;
+        nrLocuriPerRand = 10;
+        tipSala = "STANDARD 2D (Configuratie 6x10)";
+    }
+
+    cout << "\nAti ales sala: " << BOLD << tipSala << RESET << "\n";
+
+    // Initializarea salii cu dimensiunile specifice
     vector<Loc> cinema;
-    for (int r = 1; r <= 3; r++) {
-        for (int l = 1; l <= 10; l++) {
+    for (int r = 1; r <= nrRanduri; r++) {
+        for (int l = 1; l <= nrLocuriPerRand; l++) {
             cinema.push_back(Loc(r, l, false));
         }
     }
@@ -72,50 +99,47 @@ int main() {
     int optiune;
     do {
         cout << "\n" << ALBASTRU << "----------- MENIU PRINCIPAL -----------" << RESET << endl;
-        cout << "Va rugam selectati optiunea dorita:" << endl;
-        cout << VERDE << " 1. " << RESET << "Vezi harta salii" << endl;
-        cout << VERDE << " 2. " << RESET << "Rezerva un loc nou" << endl;
-        cout << GRI << " 0. " << RESET << "Iesire din aplicatie" << endl;
+        cout << "Film: " << BOLD << filmCurent.titlu << RESET << (este3D ? " (3D)" : " (2D)") << endl;
+        cout << "1. Vezi harta salii" << endl;
+        cout << "2. Rezerva un loc" << endl;
+        cout << "0. Iesire" << endl;
         cout << ALBASTRU << "---------------------------------------" << RESET << endl;
         cout << "Optiunea dvs: ";
         cin >> optiune;
 
         if (optiune == 1) {
-            afisareSala(cinema);
+            afisareSala(cinema, nrLocuriPerRand);
         } 
         else if (optiune == 2) {
             int rDorit, lDorit;
-            cout << "\n" << BOLD << "Sectiune Rezervare:" << RESET << endl;
-            cout << "Introduceti Randul (1-3): "; cin >> rDorit;
-            cout << "Introduceti Locul (1-10): "; cin >> lDorit;
+            cout << "\n" << BOLD << "Sectiune Rezervare (" << tipSala << "):" << RESET << endl;
+            cout << "Rand (1-" << nrRanduri << "): "; cin >> rDorit;
+            cout << "Loc (1-" << nrLocuriPerRand << "): "; cin >> lDorit;
 
-            int index = (rDorit - 1) * 10 + (lDorit - 1);
-
-            if (rDorit < 1 || rDorit > 3 || lDorit < 1 || lDorit > 10) {
-                cout << "\033[31mEroare: Locul nu exista!\033[0m\n";
-            } 
-            else if (cinema[index].status()) {
-                cout << "\033[31mEroare: Acest loc este deja ocupat!\033[0m\n";
+            // Validare si calcul index folosind dimensiunile salii alese
+            if (rDorit < 1 || rDorit > nrRanduri || lDorit < 1 || lDorit > nrLocuriPerRand) {
+                cout << ROSU << "Eroare: Locul nu exista in aceasta sala!" << RESET << "\n";
             } 
             else {
-                int tipP;
-                cout << "Categorie (1.Adult, 2.Elev, 3.Copil, 4.Dizab): ";
-                cin >> tipP;
+                int index = (rDorit - 1) * nrLocuriPerRand + (lDorit - 1);
 
-                Bilet b(tipP, numeZi);
-                cinema[index].ocupaLoc();
+                if (cinema[index].status()) {
+                    cout << ROSU << "Eroare: Acest loc este deja ocupat!" << RESET << "\n";
+                } 
+                else {
+                    int tipP;
+                    cout << "Categorie (1.Adult, 2.Elev, 3.Copil, 4.Dizab): ";
+                    cin >> tipP;
 
-                cout << "\n" << VERDE << "✔ REZERVARE FINALIZATA CU SUCCES!" << RESET << endl;
-                cout << "---------------------------------------" << endl;
-                cout << "Film: " << BOLD << filmCurent.titlu << RESET << (filmCurent.este3D ? " (3D)" : " (2D)") << endl;
-                cout << "Locatie: Randul " << rDorit << ", Locul " << lDorit << endl;
-                cout << "Pret total: " << BOLD << b.calculeazaPret(filmCurent.este3D) << " RON" << RESET << endl;
-                cout << "---------------------------------------" << endl;
+                    Bilet b(tipP, numeZi);
+                    cinema[index].ocupaLoc();
+
+                    cout << "\n" << VERDE << "✔ REZERVARE FINALIZATA!" << RESET << endl;
+                    cout << "Pret: " << BOLD << b.calculeazaPret(filmCurent.este3D) << " RON" << RESET << endl;
+                }
             }
         }
     } while (optiune != 0);
-
-    cout << "\nVa multumim ca ati ales cinema-ul nostru! O zi buna! 🎬\n";
 
     return 0;
 }
