@@ -1,38 +1,39 @@
-Sistem de Gestiune și Rezervare Cinema (Arhitectură Modulară C++)
-Prezentul proiect constituie o aplicație de tip consolă destinată automatizării procesului de rezervare a locurilor într-o sală de cinema. Soluția este dezvoltată utilizând paradigma programării orientate pe obiecte (POO), asigurând o separare clară a responsabilităților prin module dedicate.
+# Documentație Tehnică: Sistem Informatic pentru Gestiunea și Rezervarea Resurselor (Cinema)
 
-Funcționalități Principale
-Gestiunea Dinamică a Locurilor: Reprezentarea grafică a sălii sub formă matricială, permițând identificarea rapidă a disponibilității: L pentru loc disponibil și XX pentru loc rezervat.
+## 1. Introducere și Obiectivele Proiectului
+Prezentul proiect reprezintă o aplicație software dezvoltată în limbajul **C++**, având ca scop simularea unui sistem complex de gestiune a resurselor și de procesare a tranzacțiilor (rezervări de bilete) în cadrul unui cinematograf. 
 
-Sistem de Tarifare Diferențiat: Implementarea unei logici de calcul automat al prețului în funcție de profilul utilizatorului, acoperind categoriile: Adult, Elev, Copil și Persoane cu dizabilități.
+Obiectivul principal din punct de vedere educațional este implementarea riguroasă a paradigmei **Programării Orientate pe Obiecte (POO)**, punând accent pe concepte precum modularitatea, încapsularea datelor, decuplarea logicii de business de interfața cu utilizatorul (UI) și utilizarea eficientă a containerelor din *Standard Template Library* (STL).
 
-Politici Comerciale Speciale: Integrarea unui algoritm de tip Flat Rate pentru zilele de vineri, aplicând un tarif promoțional unic de 15 RON pentru toți utilizatorii.
+## 2. Arhitectura Sistemului și Paradigma Orientată pe Obiecte
+Aplicația este structurată pe o arhitectură ierarhică, divizată în module (clase) independente, fiecare având responsabilități clar definite, respectând principiul *Single Responsibility*:
 
-Procesarea Flexibilă a Datelor (Case-Insensitivity): Modulul de validare a datelor de intrare permite procesarea corectă a zilelor săptămânii, indiferent de utilizarea majusculelor sau minusculelor în textul introdus.
+* **Clasa `Loc` (Entitatea de bază):**
+    * Reprezintă resursa atomică alocabilă.
+    * Încapsulează starea (ocupat/liber) și atributele spațiale (rând, număr).
+    * Oferă metode de acces (getters) sigure și o metodă de mutație (`ocupaLoc()`) pentru a modifica starea resursei.
 
-Arhitectura Sistemului
-Aplicația este structurată pe trei paliere fundamentale pentru a asigura mentenanța și scalabilitatea codului:
+* **Clasa `Bilet` (Logica de Business):**
+    * Gestionează politicile de tarifare în mod dinamic, luând în calcul categorii multiple de utilizatori (Adult, Elev, Copil, Dizabilități) și suplimente tehnice (formatul 3D).
+    * Implementează algoritmi de analiză a condițiilor speciale (ex: politica "Flat Rate" pentru zilele de vineri).
+    * Utilizează metode statice și funcții lambda (`std::transform`) pentru validarea robustă a datelor de intrare (*case-insensitivity*).
 
-Modulul Loc (Loc.h / Loc.cpp): Definește entitatea scaun, gestionând coordonatele specifice (rând, număr) și starea de ocupare a acestuia.
+* **Clasa `Spectacol` (Gestionarea Colecțiilor și Agregare):**
+    * Implementează o structură bidimensională (mapată pe un `std::vector` liniar) pentru reprezentarea matriceală a sălii de cinema.
+    * Demonstrează polimorfism contextual prin alocarea dinamică a capacității sălii în funcție de formatul proiecției (ex: sălile 3D necesită configurații spațiale restrânse de 4x6, comparativ cu cele standard de 6x10).
 
-Modulul Bilet (Bilet.h / Bilet.cpp): Încapsulează întreaga logică de business referitoare la tarife, categorii de vârstă și excepții calendaristice.
+* **Clasa `Film` (Compoziție):**
+    * Ațasează metadate (titlu, elemente vizuale) și agreghează un vector de instanțe de tip `Spectacol`, creând o ierarhie logică tip *Unu-la-Mai-Mulți*.
 
-Nucleul aplicației (main.cpp): Orchestrează interacțiunea cu utilizatorul și fluxul logic al operațiunilor de rezervare.
+## 3. Concepte Tehnice și Algoritmice Evidențiate
+* **Utilizarea STL:** Folosirea intensivă a containerului `std::vector` pentru gestionarea dinamică a memoriei, evitând limitările și riscurile array-urilor statice specifice limbajului C.
+* **Manipularea Șirurilor de Caractere:** Transformarea șirurilor de intrare prin `std::tolower` pentru a asigura o procesare uniformă a comenzilor introduse de utilizator.
+* **Interfața CLI (Command Line Interface) Avansată:** Utilizarea codurilor de evadare ANSI (ANSI escape codes) pentru a genera o hartă cromatică a resurselor disponibile (verde = liber, gri = ocupat), îmbunătățind considerabil experiența utilizatorului (UX) în mediul terminal.
+* **Gestionarea Stărilor (State Machine):** Fluxul programului (în `main.cpp`) este controlat printr-o serie de bucle și flag-uri booleene (`aplicatieInRulare`, `inapoiLaOrar`), mimând o mașină de stări finită care permite navigarea bidirecțională prin meniuri.
 
-Procedura de Compilare și Execuție
-Pentru asamblarea modulelor într-un fișier binar executabil, utilizați compilatorul g++ cu următoarea sintaxă în terminal:
+## 4. Instrucțiuni de Compilare și Rulare
+Proiectul necesită un compilator standard de C++ (minim C++11 recomandat, datorită utilizării funcțiilor lambda și a conversiilor de tip `std::to_string`).
 
-g++ main.cpp Loc.cpp Bilet.cpp -o cinema_complet
-
-Lansarea aplicației se realizează prin comanda:
-
-./cinema_complet
-
-Ghid de Utilizare
-Configurare Context: La inițializarea programului, specificați ziua curentă a săptămânii prin introducerea numelui acesteia.
-
-Navigare Meniu: Utilizați interfața numerică pentru a consulta starea actuală a sălii sau pentru a iniția o nouă rezervare.
-
-Selecție Coordonate: Rezervarea necesită introducerea succesivă a rândului (intervalul 1-3) și a locului specific (intervalul 1-10).
-
-Finalizare Tranzacție: Selectați categoria corespunzătoare pentru emiterea biletului și afișarea valorii fiscale finale.
+**Sintaxa pentru compilare (GCC / G++):**
+```bash
+g++ main.cpp Loc.cpp Bilet.cpp Film.cpp Spectacol.cpp -o cinema
