@@ -6,6 +6,7 @@
 #include "Bilet.h"
 #include "Film.h"
 #include "Spectacol.h"
+#include "Autentificare.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ const string RESET = "\033[0m";
 const string BOLD = "\033[1m";
 const string ROSU = "\033[31m";
 const string CYAN = "\033[36m";
+const string MAGENTA = "\033[35m";
 
 void curataEcran() {
 #ifdef _WIN32
@@ -45,46 +47,205 @@ void afisareSala(const vector<Loc>& sala, int locuriPerRand) {
     cout << "\n\n" << GRI << "(Legenda: " << VERDE << "● Liber " << GRI << "● Ocupat)" << RESET << "\n";
 }
 
-// Functie pentru popularea bazei de date a cinematografului
+// BAZA DE DATE EXTINSA: 20 DE FILME (10 ADULTI / 10 COPII)
 vector<Film> initializareCinema() {
     vector<Film> filme;
 
-    // 1. AVATAR
-    Film avatar("Avatar: The Way of Water", R"(
-       .
-      / \
-     /   \   <O>
-    /_____\  /|\
-      |||    / \
-    )");
-    avatar.adaugaSpectacol("12:00", true, "Sala 1 (IMAX)");
-    avatar.adaugaSpectacol("15:30", false, "Sala 4 (Standard)");
-    avatar.adaugaSpectacol("18:00", true, "Sala 1 (IMAX)");
-    avatar.adaugaSpectacol("20:45", true, "Sala VIP 3D");
+    // ==================== SECTIUNEA ADULTI / ADOLESCENTI ====================
+    
+    // 1. Avatar
+    Film avatar("Avatar: The Way of Water", R"(   ____  _  _  ____
+  / ___|| || ||  _ \
+  \___ \| || || |_) |
+   ___) |__   _|  _ <
+  |____/   |_| |_| \_\)");
+    avatar.adaugaSpectacol("12:00", true, "Sala 1 (IMAX 3D)");
+    avatar.adaugaSpectacol("18:00", true, "Sala 1 (IMAX 3D)");
+    avatar.adaugaSpectacol("21:30", false, "Sala 4 (Standard 2D)");
     filme.push_back(avatar);
 
-    // 2. DUNE
-    Film dune("Dune: Part Two", R"(
-      /\  _  _  /\
-     /  \/ \/ \/  \
-    /__________\___\
-    )");
-    dune.adaugaSpectacol("13:00", false, "Sala 2 (Standard)");
-    dune.adaugaSpectacol("16:00", false, "Sala 2 (Standard)");
+    // 2. Dune
+    Film dune("Dune: Part Two", R"(     /\  _  _  /\
+    /  \/ \/ \/  \
+   /_____________\)");
+    dune.adaugaSpectacol("14:00", false, "Sala 2 (Dolby 2D)");
     dune.adaugaSpectacol("19:30", true, "Sala 3 (Atmos 3D)");
-    dune.adaugaSpectacol("22:00", true, "Sala 3 (Atmos 3D)");
+    dune.adaugaSpectacol("22:45", true, "Sala VIP 3D");
     filme.push_back(dune);
 
-    // 3. DEADPOOL
-    Film deadpool("Deadpool & Wolverine", R"(
-      ( X _ X )
-       \|/ \W/
-    )");
-    deadpool.adaugaSpectacol("14:00", false, "Sala 5 (Standard)");
-    deadpool.adaugaSpectacol("17:15", false, "Sala 5 (Standard)");
-    deadpool.adaugaSpectacol("20:00", true, "Sala 6 (3D)");
+    // 3. Deadpool
+    Film deadpool("Deadpool & Wolverine", R"(     ( X _ X )
+      \|/ \W/ )");
+    deadpool.adaugaSpectacol("16:30", false, "Sala 5 (Standard 2D)");
+    deadpool.adaugaSpectacol("20:00", true, "Sala 1 (IMAX 3D)");
     deadpool.adaugaSpectacol("23:15", false, "Sala VIP 2D");
     filme.push_back(deadpool);
+
+    // 4. Oppenheimer
+    Film oppenheimer("Oppenheimer", R"(       (     )
+     (         )
+    (___________)
+        |||||
+        |||||)");
+    oppenheimer.adaugaSpectacol("13:00", false, "Sala 4 (Standard 2D)");
+    oppenheimer.adaugaSpectacol("17:00", false, "Sala 2 (Dolby 2D)");
+    oppenheimer.adaugaSpectacol("21:00", false, "Sala 2 (Dolby 2D)");
+    filme.push_back(oppenheimer);
+
+    // 5. Interstellar
+    Film interstellar("Interstellar", R"(      ______
+   .-'      '-.
+  /  _______   \  <- O
+  \____________/
+   '-.______.-')");
+    interstellar.adaugaSpectacol("15:00", false, "Sala 3 (Atmos 2D)");
+    interstellar.adaugaSpectacol("21:45", false, "Sala 1 (IMAX 2D)");
+    filme.push_back(interstellar);
+
+    // 6. The Dark Knight
+    Film batman("The Dark Knight", R"(   /\              /\
+  /  \_/\______/\_/  \
+  \______      ______/
+         \/  \/)");
+    batman.adaugaSpectacol("18:30", false, "Sala 5 (Standard 2D)");
+    batman.adaugaSpectacol("22:00", false, "Sala 4 (Standard 2D)");
+    filme.push_back(batman);
+
+    // 7. Matrix
+    Film matrix("The Matrix", R"(  [1][0][1][0][1]
+  [0][1][0][1][0]
+  [1][0][1][0][1])");
+    matrix.adaugaSpectacol("11:00", false, "Sala 6 (Standard 2D)");
+    matrix.adaugaSpectacol("23:30", false, "Sala 5 (Standard 2D)");
+    filme.push_back(matrix);
+
+    // 8. Inception
+    Film inception("Inception", R"(      / \
+     /   \
+    |  X  |
+     \   /
+      \_/)");
+    inception.adaugaSpectacol("14:15", false, "Sala 6 (Standard 2D)");
+    inception.adaugaSpectacol("20:30", false, "Sala 3 (Atmos 2D)");
+    filme.push_back(inception);
+
+    // 9. Joker
+    Film joker("Joker", R"(   \  :  /
+  ( : o o : )
+   \  ---  /
+    \_____/)");
+    joker.adaugaSpectacol("19:00", false, "Sala VIP 2D");
+    joker.adaugaSpectacol("22:15", false, "Sala 6 (Standard 2D)");
+    filme.push_back(joker);
+
+    // 10. Gladiator II
+    Film gladiator("Gladiator II", R"(     ______
+    |======|
+    | [oo] |  <- [I|I]
+    |______/
+     /    \)");
+    gladiator.adaugaSpectacol("16:00", false, "Sala 2 (Dolby 2D)");
+    gladiator.adaugaSpectacol("19:45", true, "Sala 3 (Atmos 3D)");
+    filme.push_back(gladiator);
+
+
+    // ==================== SECTIUNEA COPII / FAMILIE ====================
+
+    // 11. Inside Out 2
+    Film insideOut("Inside Out 2", R"(    .-''''-.
+   /   _  _ \
+  |   (o)(o) |  *Happy*
+  |     __   |
+   \   \__/ /
+    '-....-')");
+    insideOut.adaugaSpectacol("10:30", false, "Sala 4 (Standard 2D)");
+    insideOut.adaugaSpectacol("13:15", true, "Sala 7 (Kids 3D)");
+    insideOut.adaugaSpectacol("16:00", true, "Sala 7 (Kids 3D)");
+    filme.push_back(insideOut);
+
+    // 12. Minions
+    Film minions("Minions: The Rise of Gru", R"(     .---.
+    /     \
+    | [o_o]|  <- Banana!
+    |  ___ |
+    \_____/)");
+    minions.adaugaSpectacol("11:15", false, "Sala 7 (Kids 2D)");
+    minions.adaugaSpectacol("14:30", false, "Sala 4 (Standard 2D)");
+    minions.adaugaSpectacol("17:30", true, "Sala 8 (Kids 3D)");
+    filme.push_back(minions);
+
+    // 13. Kung Fu Panda 4
+    Film panda("Kung Fu Panda 4", R"(    c(O  O)b
+    ,(___).
+    /     \
+   |   P   |
+    \_____/)");
+    panda.adaugaSpectacol("12:15", false, "Sala 8 (Kids 2D)");
+    panda.adaugaSpectacol("15:15", true, "Sala 7 (Kids 3D)");
+    filme.push_back(panda);
+
+    // 14. Frozen II
+    Film frozen("Frozen II", R"(     \ | /
+    '- * -'
+     / | \   *Let it go*)");
+    frozen.adaugaSpectacol("10:00", false, "Sala 8 (Kids 2D)");
+    frozen.adaugaSpectacol("13:45", true, "Sala 8 (Kids 3D)");
+    filme.push_back(frozen);
+
+    // 15. Shrek
+    Film shrek("Shrek Forever After", R"(  \/        \/
+   \_______/
+   / o   o \
+  (    _    )
+   \_______/)");
+    shrek.adaugaSpectacol("15:45", false, "Sala 6 (Standard 2D)");
+    shrek.adaugaSpectacol("18:15", false, "Sala 7 (Kids 2D)");
+    filme.push_back(shrek);
+
+    // 16. Cars
+    Film cars("Cars 3", R"(     ______
+   _/__|_\_
+  [(o)---(o)] vroom!
+   `-()--()` )");
+    cars.adaugaSpectacol("11:30", false, "Sala 5 (Standard 2D)");
+    cars.adaugaSpectacol("14:00", false, "Sala 8 (Kids 2D)");
+    filme.push_back(cars);
+
+    // 17. The Lion King
+    Film lionKing("The Lion King", R"(     _  _
+    ( `\/' )
+   _ \    / _  (CROWN)
+   \'-.__.-'/
+    `--..--' )");
+    lionKing.adaugaSpectacol("12:45", false, "Sala 6 (Standard 2D)");
+    lionKing.adaugaSpectacol("17:45", false, "Sala 4 (Standard 2D)");
+    filme.push_back(lionKing);
+
+    // 18. Coco
+    Film coco("Coco", R"(     _G_
+    /   \   [-]
+    | O O |  / \
+    |  V  |
+    \_____/ )");
+    coco.adaugaSpectacol("14:45", false, "Sala 7 (Kids 2D)");
+    coco.adaugaSpectacol("19:00", false, "Sala 8 (Kids 2D)");
+    filme.push_back(coco);
+
+    // 19. Moana
+    Film moana("Moana 2", R"(     ~~~~
+    ~ (S) ~  <- OOO
+     ~~~~)");
+    moana.adaugaSpectacol("10:15", false, "Sala 6 (Standard 2D)");
+    moana.adaugaSpectacol("16:15", true, "Sala 8 (Kids 3D)");
+    filme.push_back(moana);
+
+    // 20. Harry Potter
+    Film harryPotter("Harry Potter special", R"(       
+     o- -o
+    (  .  )  *Magic*)");
+    harryPotter.adaugaSpectacol("16:45", false, "Sala 3 (Atmos 2D)");
+    harryPotter.adaugaSpectacol("20:15", false, "Sala 5 (Standard 2D)");
+    filme.push_back(harryPotter);
 
     return filme;
 }
@@ -94,12 +255,70 @@ int main() {
     system("chcp 65001 > nul");
     #endif
 
-    vector<Film> listaFilme = initializareCinema();
+    ManagerAutentificare auth; 
     bool aplicatieInRulare = true;
+    bool esteLogat = false;
+    string utilizatorCurent = "";
+
+    // --- MENIU AUTENTIFICARE ---
+    while (aplicatieInRulare && !esteLogat) {
+        curataEcran();
+        cout << ALBASTRU << "===============================================" << RESET << endl;
+        cout << BOLD << "       🔒 AUTENTIFICARE CINEMA APP 🔒" << RESET << endl;
+        cout << ALBASTRU << "===============================================" << RESET << endl;
+        cout << VERDE << " 1." << RESET << " Logare cont existent\n";
+        cout << VERDE << " 2." << RESET << " Inregistrare cont nou\n";
+        cout << ROSU << " 0." << RESET << " Iesire\n";
+        cout << "-----------------------------------------------" << endl;
+        cout << GALBEN << "➤ " << RESET << "Alege o optiune: ";
+        
+        int optiuneAuth; cin >> optiuneAuth;
+
+        if (optiuneAuth == 0) {
+            aplicatieInRulare = false;
+        } 
+        else if (optiuneAuth == 1) {
+            string u, p;
+            cout << " Username: "; cin >> u;
+            cout << " Parola: "; cin >> p;
+            
+            if (auth.logare(u, p)) {
+                esteLogat = true;
+                utilizatorCurent = u;
+                cout << VERDE << "\nAutentificare reusita! Bine ai revenit, " << u << "! Apasa Enter..." << RESET;
+                cin.ignore(); cin.get();
+            } else {
+                cout << ROSU << "\nUsername sau parola incorecta! Apasa Enter..." << RESET;
+                cin.ignore(); cin.get();
+            }
+        } 
+        else if (optiuneAuth == 2) {
+            string u, p;
+            cout << " Alege un Username: "; cin >> u;
+            cout << " Alege o Parola: "; cin >> p;
+            
+            if (auth.inregistrare(u, p)) {
+                cout << VERDE << "\nCont creat cu succes! Te rugam sa te loghezi. Apasa Enter..." << RESET;
+                cin.ignore(); cin.get();
+            } else {
+                cout << ROSU << "\nEroare: Username-ul exista deja! Incearca altul. Apasa Enter..." << RESET;
+                cin.ignore(); cin.get();
+            }
+        }
+    }
+
+    if (!aplicatieInRulare) {
+        curataEcran();
+        cout << "\nLa revedere!\n" << endl;
+        return 0;
+    }
+
+    // --- MENIU PRINCIPAL CINEMA ---
+    vector<Film> listaFilme = initializareCinema();
 
     curataEcran();
     cout << ALBASTRU << "===============================================" << RESET << endl;
-    cout << BOLD << "       ✨ Bine ati venit la Cinema App ✨" << RESET << endl;
+    cout << BOLD << "  ✨ Bine ai venit, " << VERDE << utilizatorCurent << RESET << BOLD << "! ✨" << RESET << endl;
     cout << ALBASTRU << "===============================================" << RESET << endl;
     
     cout << "\n" << ALBASTRU << BOLD << "💡 INFO: " << RESET << "In ziua de " << VERDE << "vineri" << RESET << " avem o promotie speciala\n";
@@ -113,18 +332,27 @@ int main() {
         cout << BOLD << "FILME DISPONIBILE ASTAZI:\n" << RESET;
         cout << "-----------------------------------------------" << endl;
         
-        for (size_t i = 0; i < listaFilme.size(); i++) {
-            cout << VERDE << i + 1 << ". " << RESET << BOLD << listaFilme[i].titlu << RESET << "\n";
+        // Afisare catalog impartit vizual
+        cout << MAGENTA << "--- PENTRU ADULTI SI ADOLESCENTI ---" << RESET << "\n";
+        for (size_t i = 0; i < 10; i++) {
+            cout << VERDE << i + 1 << "." << RESET << " " << listaFilme[i].titlu << "\n";
         }
-        cout << ROSU << "0. " << RESET << "Iesire aplicatie\n";
+        
+        cout << MAGENTA << "\n--- PENTRU COPII SI FAMILIE ---" << RESET << "\n";
+        for (size_t i = 10; i < listaFilme.size(); i++) {
+            cout << VERDE << i + 1 << "." << RESET << " " << listaFilme[i].titlu << "\n";
+        }
+        
+        cout << "-----------------------------------------------" << endl;
+        cout << ROSU << "0. " << RESET << "Deconectare si iesire\n";
         cout << "-----------------------------------------------" << endl;
         
-        cout << GALBEN << "➤ " << RESET << "Alege un film (1-" << listaFilme.size() << "): ";
+        cout << GALBEN << "➤ " << RESET << "Alege un film (1-20): ";
         int indexFilm; cin >> indexFilm;
 
         if (indexFilm == 0) break;
         if (indexFilm < 1 || indexFilm > (int)listaFilme.size()) {
-            cout << ROSU << "Selectie invalida! Apasa Enter pentru a continua..." << RESET;
+            cout << ROSU << "Selectie invalida! Apasa Enter..." << RESET;
             cin.ignore(); cin.get();
             continue;
         }
@@ -135,9 +363,9 @@ int main() {
         while (!inapoiLaFilme && aplicatieInRulare) {
             curataEcran();
             cout << CYAN << listaFilme[filmSelectat].asciiArt << RESET << endl;
-            cout << BOLD << "Film: " << listaFilme[filmSelectat].titlu << RESET << endl;
+            cout << BOLD << "\nFilm selectat: " << listaFilme[filmSelectat].titlu << RESET << endl;
             cout << "-----------------------------------------------" << endl;
-            cout << "PROGRAMARI DISPONIBILE:\n";
+            cout << "PROGRAMARI SI SALI DISPONIBILE:\n";
             
             for (size_t j = 0; j < listaFilme[filmSelectat].spectacole.size(); j++) {
                 Spectacol& spec = listaFilme[filmSelectat].spectacole[j];
@@ -163,7 +391,6 @@ int main() {
             }
 
             int specSelectat = indexSpec - 1;
-            // Extragem referinta catre spectacolul ales pentru a salva locurile permanent
             Spectacol& spectacolCurent = listaFilme[filmSelectat].spectacole[specSelectat];
             
             bool inapoiLaOrar = false;
@@ -222,6 +449,7 @@ int main() {
                             cout << VERDE << "\n==================================================" << RESET << endl;
                             cout << BOLD << "       VĂ MULȚUMIM PENTRU ACHIZIȚIE! 🍿" << RESET << endl;
                             cout << VERDE << "==================================================" << RESET << endl;
+                            cout << " 👤 Client:  " << utilizatorCurent << "\n";
                             cout << " 🎬 Film:    " << BOLD << listaFilme[filmSelectat].titlu << RESET << "\n";
                             cout << " 🕒 Ora:     " << BOLD << spectacolCurent.ora << RESET 
                                  << " (" << (spectacolCurent.este3D ? "3D" : "2D") << ")\n";
@@ -246,6 +474,6 @@ int main() {
     }
 
     curataEcran();
-    cout << "\n" << ALBASTRU << "Va multumim ca ati ales Cinema App. La revedere! 🎬\n" << RESET << endl;
+    cout << "\n" << ALBASTRU << "Va multumim, " << utilizatorCurent << ", ca ati ales Cinema App. La revedere! 🎬\n" << RESET << endl;
     return 0;
 }
