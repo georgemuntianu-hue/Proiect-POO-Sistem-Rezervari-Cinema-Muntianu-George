@@ -36,4 +36,4 @@ Proiectul necesită un compilator standard de C++ (minim C++11 recomandat, dator
 
 **Sintaxa pentru compilare (GCC / G++):**
 ```bash
-g++ main.cpp Loc.cpp Bilet.cpp Film.cpp Spectacol.cpp -o cinema
+g++ main.cpp Film.cpp Spectacol.cpp Loc.cpp Bilet.cpp Autentificare.cpp -o cinema
